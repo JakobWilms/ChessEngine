@@ -1,0 +1,70 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+    
+    <Style Selector="Border#MoveListBorder">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="Padding" Value="0, 7" />
+    </Style>
+    
+    <Style Selector="TextBox">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Padding" Value="5, 7" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="Padding" Value="0, 7" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <Style Selector="Button#FenButton">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    
+    <Style Selector="Button.moveButton">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="25" />
+    </Style>
+    
+
+</Styles>

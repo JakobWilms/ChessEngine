@@ -1,0 +1,67 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Chess.MainWindow"
+        Title="ChessEngine"
+        WindowState="Maximized"
+        Padding="10"
+        Background="#161512">
+    <Window.Styles>
+        <StyleInclude Source="/Assets/Styles.axaml"></StyleInclude>
+        
+    </Window.Styles>
+    <Grid Name="MainGrid" ColumnDefinitions="56*,80*,56*" RowDefinitions="14*, 80*, 14*">
+        <Grid Name="FenGrid" Grid.Row="0" Grid.Column="0" RowDefinitions="*,*" ColumnDefinitions="10*,500*,10*"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <TextBox Name="FenBox" Grid.Row="0" Grid.Column="1" />
+            <Button Name="FenButton" Grid.Row="1" Grid.Column="1">
+                Import!
+            </Button>
+        </Grid>
+
+        <Canvas Grid.Column="1" Grid.Row="1">
+            <UniformGrid Name="Board" Background="#363532"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <UniformGrid Name="PossibleMoves"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <UniformGrid Name="Pieces"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Canvas>
+        <Grid Grid.Row="1" Grid.Column="2" ColumnDefinitions="3*,50*,3*" RowDefinitions="6*,74*"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,30*,*" RowDefinitions="*,10*,*"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Button Grid.Column="1" Grid.Row="1" Classes="moveButton" Name="PreviousMoveButton">&#x2baa;</Button>
+            </Grid>
+            <Border Grid.Row="1" Grid.Column="1" Name="MoveListBorder">
+                <Grid Name="MoveListGrid" ColumnDefinitions="*, 5*, 5*">
+                    <ScrollViewer Name="MoveListFullMovesScroll" Grid.Row="0" Grid.Column="0"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                        <TextBlock Name="MoveListFullMoves" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        </TextBlock>
+                    </ScrollViewer>
+                    <ScrollViewer Name="MoveListWhiteScroll" Grid.Row="0" Grid.Column="1"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                        <TextBlock Name="MoveListWhite" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        </TextBlock>
+                    </ScrollViewer>
+                    <ScrollViewer Name="MoveListBlackScroll" Grid.Row="0" Grid.Column="2"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBlock Name="MoveListBlack" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        </TextBlock>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            
+
+        </Grid>
+    </Grid>
+</Window>
