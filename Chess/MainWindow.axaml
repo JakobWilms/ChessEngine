@@ -10,65 +10,60 @@
         Background="#161512">
     <Window.Styles>
         <StyleInclude Source="/Assets/Styles.axaml"></StyleInclude>
+
     </Window.Styles>
-    
-    <Grid Name="MainGrid" ColumnDefinitions="7*,10*,7*" RowDefinitions="7*, 40*, 7*" Classes="stretch"
-          ShowGridLines="False">
+    <Grid Name="MainGrid" ColumnDefinitions="7*,10*,7*" RowDefinitions="7*, 40*, 7*">
         <Grid Name="TopBoardGrid" Grid.Row="0" Grid.Column="1" RowDefinitions="2*,5*"
-              Classes="stretch">
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid Name="FenGrid" Grid.Row="0" ColumnDefinitions="*,35*,*,5*,*"
-                  Classes="stretch">
-                <TextBox Grid.Column="1" Name="FenBox" Classes="centerContent" />
-                <Button Name="FenButton" Grid.Column="3" Classes="color centerContent stretch">
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBox Grid.Column="1" Name="FenBox" />
+                <Button Name="FenButton" Grid.Column="3">
                     Import!
                 </Button>
             </Grid>
         </Grid>
-        
-        <UniformGrid Grid.Row="1" Grid.Column="1" Name="Board" Background="#363532"
-                     Columns="8" Width="{Binding #Board.Height}"
-                     Classes="center"></UniformGrid>
-        
-        <Grid Grid.Row="1" Grid.Column="2" ColumnDefinitions="3*,50*,3*" RowDefinitions="6*,74*" Classes="stretch">
-            <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,30*,*" RowDefinitions="*,10*,*" Classes="stretch">
-                <Button Grid.Column="1" Grid.Row="1" Classes="color centerContent stretch" Name="PreviousMoveButton">&#x2baa;</Button>
+
+        <Canvas Grid.Column="1" Grid.Row="1">
+            <UniformGrid Name="Board" Background="#363532"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <UniformGrid Name="PossibleMoves"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <UniformGrid Name="Pieces"
+                         Canvas.Top="0" Canvas.Left="0"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Canvas>
+        <Grid Grid.Row="1" Grid.Column="2" ColumnDefinitions="3*,50*,3*" RowDefinitions="6*,74*"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,30*,*" RowDefinitions="*,10*,*"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Button Grid.Column="1" Grid.Row="1" Classes="moveButton" Name="PreviousMoveButton">&#x2baa;</Button>
             </Grid>
             <Border Grid.Row="1" Grid.Column="1" Name="MoveListBorder">
                 <Grid Name="MoveListGrid" ColumnDefinitions="*, 5*, 5*">
                     <ScrollViewer Name="MoveListFullMovesScroll" Grid.Row="0" Grid.Column="0"
-                                  Classes="stretch hiddenScrollBar">
-                        <TextBlock Name="MoveListFullMoves" Classes="stretch color" />
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                        <TextBlock Name="MoveListFullMoves" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        </TextBlock>
                     </ScrollViewer>
-                    <ScrollViewer Name="MoveListWhiteScroll" Grid.Row="0" Grid.Column="1"
-                                  Classes="moveList stretch hiddenScrollBar">
-                        <TextBlock Name="MoveListWhite" Classes="moveList stretch color" />
+                    <ScrollViewer Name="MoveListWhiteScroll" Grid.Row="0" Grid.Column="1" Classes="moveList"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                        <TextBlock Name="MoveListWhite" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Classes="moveList">
+                        </TextBlock>
                     </ScrollViewer>
-                    <ScrollViewer Name="MoveListBlackScroll" Grid.Row="0" Grid.Column="2" Classes="stretch">
-                        <TextBlock Name="MoveListBlack" Classes="moveList stretch color" />
+                    <ScrollViewer Name="MoveListBlackScroll" Grid.Row="0" Grid.Column="2"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBlock Name="MoveListBlack" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Classes="moveList">
+                        </TextBlock>
                     </ScrollViewer>
                 </Grid>
             </Border>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="2" Name="BottomRightGrid" ColumnDefinitions="5*,2*" RowDefinitions="2*,5*"
-              Classes="stretch">
-            <Grid Grid.Row="1" Grid.Column="0" Name="BPromotionGrid" RowDefinitions="*" ColumnDefinitions="*,*,*,*"
-                  Classes="stretch" IsVisible="False">
-                <Image Grid.Column="0" Name="BKnightPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="1" Name="BBishopPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="2" Name="BRookPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="3" Name="BQueenPromotion" Classes="stretch"></Image>
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="0" Grid.Column="2" Name="TopRightGrid" ColumnDefinitions="5*,2*" RowDefinitions="5*,2*"
-              Classes="stretch">
-            <Grid Grid.Row="0" Grid.Column="0" Name="WPromotionGrid" RowDefinitions="*" ColumnDefinitions="*,*,*,*"
-                  Classes="stretch" IsVisible="False">
-                <Image Grid.Column="0" Name="WKnightPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="1" Name="WBishopPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="2" Name="WRookPromotion" Classes="stretch"></Image>
-                <Image Grid.Column="3" Name="WQueenPromotion" Classes="stretch"></Image>
-            </Grid>
-        </Grid>
 
+
+        </Grid>
     </Grid>
 </Window>

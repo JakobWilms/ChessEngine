@@ -1,59 +1,36 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Styles.Resources>
-        <Color x:Key="Foreground">#868582</Color>
-        <Color x:Key="Background">#262522</Color>
-        <Color x:Key="BorderBrush">#363532</Color>
-        <Color x:Key="ForegroundPointerOver">#969592</Color>
-        <Color x:Key="BackgroundPointerOver">#363532</Color>
-        <Color x:Key="BorderBrushPointerOver">#464542</Color>
-        <Color x:Key="ForegroundPressed">#a6a5a2</Color>
-        <Color x:Key="BackgroundPressed">#464542</Color>
-        <Color x:Key="BorderBrushPressed">#2c75ff</Color>
-        <Color x:Key="ForegroundFocus">#a6a5a2</Color>
-        <Color x:Key="BackgroundFocus">#363532</Color>
-        <Color x:Key="BorderBrushFocus">#2c75ff</Color>
-    </Styles.Resources>
-
-    <Style Selector="Control.stretch">
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
-    </Style>
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
     
-    <Style Selector="UniformGrid.center">
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="TextBlock.color">
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-    </Style>
-
-    <Style Selector="ScrollViewer.hiddenScrollBar">
-        <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
-    </Style>
-
-    <Style Selector="ContentPresenter.centerContent">
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="ContentControl.centerContent">
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-    </Style>
-
     <Style Selector="Border#MoveListBorder">
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="CornerRadius" Value="15" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Background" Value="#262522" />
         <Setter Property="Padding" Value="0, 7" />
     </Style>
-
+    
+    <Style Selector="TextBox">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Padding" Value="5, 7" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    
     <Style Selector="TextBlock.moveList">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
         <Setter Property="Padding" Value="0, 7" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="VerticalAlignment" Value="Top" />
@@ -61,8 +38,10 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="20" />
     </Style>
-
+    
     <Style Selector="TextBlock#MoveListFullMoves">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
         <Setter Property="Padding" Value="0, 7" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="VerticalAlignment" Value="Top" />
@@ -71,71 +50,32 @@
         <Setter Property="FontSize" Value="21" />
     </Style>
 
-    <Style Selector="TextBox">
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
+    <Style Selector="Button#FenButton">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-        <Setter Property="Padding" Value="5, 7" />
-        <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="BorderBrush" Value="#363532" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    <Style Selector="TextBox:pointerover">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundPointerOver}" />
-    </Style>
-    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="Background" Value="{StaticResource BackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushPointerOver}" />
-    </Style>
-    <Style Selector="TextBox:pointerover /template/ TextBlock#PART_Watermark">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundPointerOver}" />
-    </Style>
-    <Style Selector="TextBox:focus">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundFocus}" />
-    </Style>
-    <Style Selector="TextBox:focus /template/ TextBlock#PART_Watermark">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundFocus}" />
-    </Style>
-    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-        <Setter Property="Background" Value="{StaticResource BackgroundFocus}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushFocus}" />
-        <Setter Property="BorderThickness" Value="2" />
-    </Style>
-    <Style Selector="TextBox:pressed /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BackgroundPressed}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushPressed}" />
-    </Style>
-
-    <Style Selector="Button">
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+    
+    <Style Selector="Button.moveButton">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderBrush" Value="#363532" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="25" />
     </Style>
-    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushPointerOver}" />
-    </Style>
-    <Style Selector="Button:pressed">
-        <Setter Property="RenderTransform" Value="scale(0.95)"></Setter>
-    </Style>
-    <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BackgroundPressed}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushPressed}" />
-    </Style>
-    <Style Selector="Button#PreviousMoveButton">
-        <Setter Property="FontSize" Value="25"></Setter>
-    </Style>
-
+    
 
 </Styles>
