@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 
 namespace Chess
@@ -10,16 +11,10 @@ namespace Chess
         {
             InitializeComponent();
 
-            int boardSize = Screens.Primary.Bounds.Height * 5 / 7;
-            boardSize -= boardSize % 8;
-
-
-            var cDesign = new CDesign(boardSize, this);
-
             CAttackMap.Calculate();
             CBoard board = FenReader.ImportFen(FenReader.StartingFen);
             Engine.ReadEngines(Args);
-            CDisplay.Instance = new CDisplay(this, boardSize, Args[0], board);
+            CDisplay.Instance = new CDisplay(this, Args[0], board);
             CDisplay.Instance.Display();
         }
         

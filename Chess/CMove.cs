@@ -101,10 +101,12 @@ public class CMove
     }
 
     public byte GetTo() => (byte)(_move & 0x3f);
+    public CSquare GetToSquare() => (CSquare)GetTo();
     public byte GetFrom() => (byte)((_move >> 6) & 0x3f);
+    public CSquare GetFromSquare() => (CSquare)GetFrom();
     public MoveFlag GetFlags() => (MoveFlag)((_move >> 12) & 0x0f);
     public byte GetToPiece() => (byte)(_pieces & 0xf);
-    private PieceType GetToPieceType() => (PieceType)GetToPiece();
+    public PieceType GetToPieceType() => (PieceType)GetToPiece();
     public byte GetFromPiece() => (byte)((_pieces >> 4) & 0xf);
     public PieceType GetFromPieceType() => (PieceType)GetFromPiece();
 
@@ -185,7 +187,7 @@ public class CMove
         UpdateCastlingRights(board);
         if (board.ToMove == ColorType.Black) board.FullMoves++;
         board.SwapToMove();
-        if (GetFromPieceType() is WhitePawn or BlackPawn || IsCapture(GetFlags()))
+        if (GetFromPieceType() is WhitePawn or BlackPawn || IsCapture())
             board.SetHalfMoves(0);
         else board.SetHalfMoves((byte)(board.GetHalfMoves() + 1));
     }
@@ -430,7 +432,10 @@ public class CMove
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    private static bool IsCapture(MoveFlag flag) => flag is Capture or EpCapture or KnightPromotionCapture
+    public bool IsPromotion() => GetFlags() is KnightPromotion or BishopPromotion or RookPromotion or QueenPromotion
+        or KnightPromotionCapture or BishopPromotionCapture or RookPromotionCapture or QueenPromotionCapture;
+
+    public bool IsCapture() => GetFlags() is Capture or EpCapture or KnightPromotionCapture
         or BishopPromotionCapture or RookPromotionCapture or QueenPromotionCapture;
 }
 

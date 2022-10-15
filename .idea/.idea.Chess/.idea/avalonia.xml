@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Chess/App.axaml" value="Chess/Chess.csproj" />
+        <entry key="Chess/Assets/Styles.axaml" value="Chess/Chess.csproj" />
+        <entry key="Chess/MainWindow.axaml" value="Chess/Chess.csproj" />
+        <entry key="Chess/Styles.axaml" value="Chess/Chess.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
