@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
-using Avalonia.Media;
+using Avalonia.Layout;
 
 namespace Chess;
 
@@ -15,64 +13,51 @@ public class CDisplay
     private static byte _fromPos = 64;
 
     private readonly MainWindow _window;
-    private readonly Panel[] _pieces;
-    private readonly Panel[] _possibleMoves;
-    private readonly int _boardSize;
+    private readonly List<byte> _possibleMoves;
     private readonly CResources _resources;
     private readonly List<CMove> _moveList;
     private readonly List<string>[] _moveOutputList;
+    private CMove _cached;
     public CBoard Board { get; private set; }
 
-    public CDisplay(MainWindow window, int boardSize, string path, CBoard board)
+    public CDisplay(MainWindow window, string path, CBoard board)
     {
         _window = window;
-        _pieces = new Panel[64];
-        _possibleMoves = new Panel[64];
-        _boardSize = boardSize;
         Board = board;
         _resources = new CResources(path);
         _moveList = new List<CMove>();
         _moveOutputList = new List<string>[3];
+        _cached = null!;
+        _window.BKnightPromotion.Source = _resources.GetTexture(PieceType.BlackKnight, true, false);
+        _window.BBishopPromotion.Source = _resources.GetTexture(PieceType.BlackBishop, true, false);
+        _window.BRookPromotion.Source = _resources.GetTexture(PieceType.BlackRook, true, false);
+        _window.BQueenPromotion.Source = _resources.GetTexture(PieceType.BlackQueen, true, false);
+        _window.WKnightPromotion.Source = _resources.GetTexture(PieceType.WhiteKnight, true, false);
+        _window.WBishopPromotion.Source = _resources.GetTexture(PieceType.WhiteBishop, true, false);
+        _window.WRookPromotion.Source = _resources.GetTexture(PieceType.WhiteRook, true, false);
+        _window.WQueenPromotion.Source = _resources.GetTexture(PieceType.WhiteQueen, true, false);
+        _window.BKnightPromotion.Tapped += OnPromotionSelection;
+        _window.BBishopPromotion.Tapped += OnPromotionSelection;
+        _window.BRookPromotion.Tapped += OnPromotionSelection;
+        _window.BQueenPromotion.Tapped += OnPromotionSelection;
+        _window.WKnightPromotion.Tapped += OnPromotionSelection;
+        _window.WBishopPromotion.Tapped += OnPromotionSelection;
+        _window.WRookPromotion.Tapped += OnPromotionSelection;
+        _window.WQueenPromotion.Tapped += OnPromotionSelection;
         for (int i = 0; i < 3; i++) _moveOutputList[i] = new List<string>();
         _window.MoveListBlackScroll.ScrollChanged += OnMoveListScrollBarChanged;
         _window.MoveListWhiteScroll.ScrollChanged += OnMoveListScrollBarChanged;
         _window.MoveListFullMovesScroll.ScrollChanged += OnMoveListScrollBarChanged;
         _window.PreviousMoveButton.Click += OnPreviousButtonClick;
-
-        CheckerBoard();
-        for (int i = 0; i < 64; i++)
-        {
-            _pieces[i] = new Panel
-            {
-                Width = boardSize >> 3,
-                Height = boardSize >> 3
-            };
-            _pieces[i].Tapped += OnPanelTapped;
-            Grid.SetColumn(_pieces[i], i % 8);
-            Grid.SetRow(_pieces[i], 7 - (i >> 3));
-            _possibleMoves[i] = new Panel
-            {
-                Width = boardSize >> 3,
-                Height = boardSize >> 3
-            };
-            Grid.SetColumn(_possibleMoves[i], i % 8);
-            Grid.SetRow(_possibleMoves[i], 7 - (i >> 3));
-        }
-
-        for (int r8 = 56; r8 >= 0; r8 -= 8)
-        for (int f = 0; f < 8; f++)
-        {
-            window.Pieces.Children.Add(_pieces[r8 + f]);
-            window.PossibleMoves.Children.Add(_possibleMoves[r8 + f]);
-        }
-
         _window.FenButton.Click += OnFenButtonClick;
+        _possibleMoves = new List<byte>();
     }
 
     public void VisibleMove(CMove move)
     {
         move.Make(Board);
         UpdateMoveList(move);
+        UpdatePossibleMoves(64);
         Display();
     }
 
@@ -134,6 +119,30 @@ public class CDisplay
         Display();
     }
 
+    private void OnPromotionSelection(object? sender, RoutedEventArgs args)
+    {
+        Image image = sender as Image ?? throw new InvalidOperationException();
+        CMove? move = image.Name switch
+        {
+            "BKnightPromotion" or "WKnightPromotion" => new CMove(_cached.GetFromSquare(), _cached.GetToSquare(),
+                _cached.IsCapture() ? MoveFlag.KnightPromotionCapture : MoveFlag.KnightPromotion,
+                _cached.GetFromPieceType(), _cached.GetToPieceType()),
+            "BBishopPromotion" or "WBishopPromotion" => new CMove(_cached.GetFromSquare(), _cached.GetToSquare(),
+                _cached.IsCapture() ? MoveFlag.BishopPromotionCapture : MoveFlag.BishopPromotion,
+                _cached.GetFromPieceType(), _cached.GetToPieceType()),
+            "BRookPromotion" or "WRookPromotion" => new CMove(_cached.GetFromSquare(), _cached.GetToSquare(),
+                _cached.IsCapture() ? MoveFlag.RookPromotionCapture : MoveFlag.RookPromotion,
+                _cached.GetFromPieceType(), _cached.GetToPieceType()),
+            "BQueenPromotion" or "WQueenPromotion" => new CMove(_cached.GetFromSquare(), _cached.GetToSquare(),
+                _cached.IsCapture() ? MoveFlag.QueenPromotionCapture : MoveFlag.QueenPromotion,
+                _cached.GetFromPieceType(), _cached.GetToPieceType()),
+            _ => null
+        };
+        if (move != null) VisibleMove(move);
+        _window.WPromotionGrid.IsVisible = false;
+        _window.BPromotionGrid.IsVisible = false;
+    }
+
     private void OnPanelTapped(object? sender, RoutedEventArgs args)
     {
         byte pos = (byte)(Grid.GetColumn(sender as Control) + 8 * (7 - Grid.GetRow(sender as Control)));
@@ -143,62 +152,55 @@ public class CDisplay
             foreach (var move in moves)
             {
                 if (move.GetFrom() != _fromPos || move.GetTo() != pos) continue;
-                //move.Print();
+                if (move.IsPromotion())
+                {
+                    if (Board.ToMove == ColorType.White) _window.WPromotionGrid.IsVisible = true;
+                    else _window.BPromotionGrid.IsVisible = true;
+                    _cached = move;
+                    return;
+                }
+
                 VisibleMove(move);
-                foreach (var panel in _possibleMoves) panel.Children.Clear();
-                _fromPos = 64;
-                break;
+                return;
             }
         }
 
-        if (Board.GetColor(pos) == Board.ToMove)
-        {
-            UpdatePossibleMoves(pos);
-        }
+        UpdatePossibleMoves(Board.GetColor(pos) == Board.ToMove ? pos : (byte)64);
     }
 
     private void UpdatePossibleMoves(byte pos)
     {
-        foreach (var panel in _possibleMoves) panel.Children.Clear();
         _fromPos = pos;
+        _possibleMoves.Clear();
+        Display();
+        if (pos == 64) return;
         List<CMove> moves = CMoveGeneration.MoveGen(Board);
         IEnumerable<CMove> pieceMoves = moves.Where(m => m.GetFrom() == _fromPos);
-        foreach (var move in pieceMoves)
-        {
-            _possibleMoves[(move.GetTo() & ~0x7) + move.GetTo() % 8].Children
-                .Add(new Image { Source = _resources.PossibleMove });
-        }
+        foreach (var move in pieceMoves) _possibleMoves.Add(move.GetTo());
+
+        Display();
     }
 
     public void Display()
     {
-        for (byte i = 0; i < 64; i++)
+        _window.Board.Children.Clear();
+        for (int r8 = 56; r8 >= 0; r8 -= 8)
+        for (int f = 0; f < 8; f++)
         {
-            _pieces[i].Children.Clear();
-            _pieces[i].Children.Add(new Image { Source = _resources.Textures[Board.GetPieceType(i)] });
+            Image image = new Image
+            {
+                Source = _resources.GetTexture(Board.GetPieceType((byte)(r8 + f)), (r8 >> 3) % 2 == f % 2,
+                    _possibleMoves.Contains((byte)(r8 + f))),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+            image.Tapped += OnPanelTapped;
+            Grid.SetColumn(image, f);
+            Grid.SetRow(image, 7 - (r8 >> 3));
+            _window.Board.Children.Add(image);
         }
 
         UpdateFenBox();
         Engine.TryEngineMove();
-    }
-
-    private void CheckerBoard()
-    {
-        var black = Color.FromRgb(181, 136, 99);
-        var white = Color.FromRgb(240, 217, 181);
-        for (byte i = 0; i < 64; i++)
-        {
-            var rectangle = new Rectangle
-            {
-                Fill = new SolidColorBrush((i >> 3) % 2 == i % 8 % 2
-                    ? white
-                    : black),
-                Width = _boardSize >> 3,
-                Height = _boardSize >> 3
-            };
-            Grid.SetColumn(rectangle, i % 8);
-            Grid.SetRow(rectangle, i >> 3);
-            _window.Board.Children.Add(rectangle);
-        }
     }
 }
