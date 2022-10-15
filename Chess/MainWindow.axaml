@@ -4,22 +4,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Chess.MainWindow"
-        Title="ChessEngine"
+        Title="Chess"
         WindowState="Maximized"
         Padding="10"
         Background="#161512">
     <Window.Styles>
         <StyleInclude Source="/Assets/Styles.axaml"></StyleInclude>
-        
-    </Window.Styles>
-    <Grid Name="MainGrid" ColumnDefinitions="56*,80*,56*" RowDefinitions="14*, 80*, 14*">
-        <Grid Name="FenGrid" Grid.Row="0" Grid.Column="0" RowDefinitions="*,*" ColumnDefinitions="10*,500*,10*"
-              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-            <TextBox Name="FenBox" Grid.Row="0" Grid.Column="1" />
-            <Button Name="FenButton" Grid.Row="1" Grid.Column="1">
-                Import!
-            </Button>
+    </Window.Styles>
+    <Grid Name="MainGrid" ColumnDefinitions="7*,10*,7*" RowDefinitions="7*, 40*, 7*">
+        <Grid Name="TopBoardGrid" Grid.Row="0" Grid.Column="1" RowDefinitions="2*,5*"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Name="FenGrid" Grid.Row="0" ColumnDefinitions="*,35*,*,5*,*"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBox Grid.Column="1" Name="FenBox" />
+                <Button Name="FenButton" Grid.Column="3">
+                    Import!
+                </Button>
+            </Grid>
         </Grid>
 
         <Canvas Grid.Column="1" Grid.Row="1">
@@ -47,20 +49,20 @@
                         <TextBlock Name="MoveListFullMoves" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         </TextBlock>
                     </ScrollViewer>
-                    <ScrollViewer Name="MoveListWhiteScroll" Grid.Row="0" Grid.Column="1"
+                    <ScrollViewer Name="MoveListWhiteScroll" Grid.Row="0" Grid.Column="1" Classes="moveList"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                   VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                        <TextBlock Name="MoveListWhite" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBlock Name="MoveListWhite" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Classes="moveList">
                         </TextBlock>
                     </ScrollViewer>
                     <ScrollViewer Name="MoveListBlackScroll" Grid.Row="0" Grid.Column="2"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <TextBlock Name="MoveListBlack" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBlock Name="MoveListBlack" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Classes="moveList">
                         </TextBlock>
                     </ScrollViewer>
                 </Grid>
             </Border>
-            
+
 
         </Grid>
     </Grid>

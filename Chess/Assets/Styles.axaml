@@ -21,14 +21,14 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="BorderBrush" Value="#363532" />
         <Setter Property="Padding" Value="5, 7" />
-        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
     
-    <Style Selector="TextBlock">
+    <Style Selector="TextBlock.moveList">
         <Setter Property="Foreground" Value="#868582" />
         <Setter Property="Background" Value="#262522" />
         <Setter Property="Padding" Value="0, 7" />
@@ -37,6 +37,17 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="20" />
+    </Style>
+    
+    <Style Selector="TextBlock#MoveListFullMoves">
+        <Setter Property="Foreground" Value="#868582" />
+        <Setter Property="Background" Value="#262522" />
+        <Setter Property="Padding" Value="0, 7" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="21" />
     </Style>
 
     <Style Selector="Button#FenButton">

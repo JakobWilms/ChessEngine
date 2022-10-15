@@ -1,5 +1,7 @@
 using System;
 using static Chess.CSquare;
+using static Chess.EnumPiece;
+using static Chess.MoveFlag;
 using static Chess.PieceType;
 
 namespace Chess;
@@ -26,58 +28,71 @@ public class CMove
     public override string ToString() =>
         $"From:{(CSquare)GetFrom()}, To:{(CSquare)GetTo()}, Flag:{GetFlags()}, FromPiece:{GetFromPieceType()}, ToPiece:{GetToPieceType()}";
 
+    public string ToShortString() =>
+        $"{(CSquare)GetFrom()}{(CSquare)GetTo()}";
+
     public string ToDisplayMove()
     {
         switch (GetFlags())
         {
-            case MoveFlag.QuietMove:
-            case MoveFlag.DoublePawnPush:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" + (CSquare)GetTo();
-            case MoveFlag.KingCastle:
+            case QuietMove:
+            case DoublePawnPush:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" +
+                       (CSquare)GetTo();
+            case KingCastle:
                 return "0-0";
-            case MoveFlag.QueenCastle:
+            case QueenCastle:
                 return "0-0-0";
-            case MoveFlag.Capture:
-            case MoveFlag.EpCapture:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" + (CSquare)GetTo();
-            case MoveFlag.KnightPromotion:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case Capture:
+            case EpCapture:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" +
+                       (CSquare)GetTo();
+            case KnightPromotion:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteKnight
                            : BlackKnight);
-            case MoveFlag.BishopPromotion:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case BishopPromotion:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteBishop
                            : BlackBishop);
-            case MoveFlag.RookPromotion:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case RookPromotion:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteRook
                            : BlackRook);
-            case MoveFlag.QueenPromotion:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case QueenPromotion:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "-" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteQueen
                            : BlackQueen);
-            case MoveFlag.KnightPromotionCapture:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case KnightPromotionCapture:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteKnight
                            : BlackKnight);
-            case MoveFlag.BishopPromotionCapture:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case BishopPromotionCapture:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteBishop
                            : BlackBishop);
-            case MoveFlag.RookPromotionCapture:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case RookPromotionCapture:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteRook
                            : BlackRook);
-            case MoveFlag.QueenPromotionCapture:
-                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" + (CSquare)GetTo() + "=" +
-                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite
+            case QueenPromotionCapture:
+                return UnicodeFromPieceType(GetFromPieceType()) + ((CSquare)GetFrom()).ToString() + "x" +
+                       (CSquare)GetTo() + "=" +
+                       UnicodeFromPieceType(CBoard.GetColorPiece(GetFromPieceType()) == NWhite
                            ? WhiteQueen
                            : BlackQueen);
             default:
@@ -135,233 +150,98 @@ public class CMove
         board.SetEnPassantTargetSquare(A1);
         switch (GetFlags())
         {
-            case MoveFlag.QuietMove:
-                MakeQuiet(board, GetFrom(), GetTo());
+            case QuietMove:
+                MakeQuiet(board, GetFrom(), GetTo(), GetFromPieceType());
                 break;
-            case MoveFlag.DoublePawnPush:
+            case DoublePawnPush:
                 MakeDoublePawnPush(board, GetFrom(), GetTo());
                 break;
-            case MoveFlag.KingCastle:
-            case MoveFlag.QueenCastle:
+            case KingCastle:
+            case QueenCastle:
                 MakeCastle(board);
                 break;
-            case MoveFlag.Capture:
+            case Capture:
                 MakeCapture(board);
                 break;
-            case MoveFlag.EpCapture:
+            case EpCapture:
                 MakeEpCapture(board);
                 break;
-            case MoveFlag.KnightPromotion:
-            case MoveFlag.BishopPromotion:
-            case MoveFlag.RookPromotion:
-            case MoveFlag.QueenPromotion:
+            case KnightPromotion:
+            case BishopPromotion:
+            case RookPromotion:
+            case QueenPromotion:
                 MakePromotion(board);
                 break;
-            case MoveFlag.KnightPromotionCapture:
-            case MoveFlag.BishopPromotionCapture:
-            case MoveFlag.RookPromotionCapture:
-            case MoveFlag.QueenPromotionCapture:
+            case KnightPromotionCapture:
+            case BishopPromotionCapture:
+            case RookPromotionCapture:
+            case QueenPromotionCapture:
                 MakePromotionCapture(board);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
 
+        UpdateCastlingRights(board);
         if (board.ToMove == ColorType.Black) board.FullMoves++;
         board.SwapToMove();
-        board.SetHalfMoves((byte)(board.GetHalfMoves() + 1));
+        if (GetFromPieceType() is WhitePawn or BlackPawn || IsCapture(GetFlags()))
+            board.SetHalfMoves(0);
+        else board.SetHalfMoves((byte)(board.GetHalfMoves() + 1));
     }
 
     public void Unmake(CBoard board)
     {
-        board.Info = _prevInfo;
         switch (GetFlags())
         {
-            case MoveFlag.QuietMove:
-            case MoveFlag.DoublePawnPush:
-                MakeQuiet(board, GetTo(), GetFrom());
+            case QuietMove:
+            case DoublePawnPush:
+                MakeQuiet(board, GetTo(), GetFrom(), GetFromPieceType());
                 break;
-            case MoveFlag.KingCastle:
-            case MoveFlag.QueenCastle:
+            case KingCastle:
+            case QueenCastle:
                 UnmakeCastle(board);
                 break;
-            case MoveFlag.Capture:
+            case Capture:
                 UnmakeCapture(board);
                 break;
-            case MoveFlag.EpCapture:
+            case EpCapture:
                 UnmakeEpCapture(board);
                 break;
-            case MoveFlag.KnightPromotion:
-            case MoveFlag.BishopPromotion:
-            case MoveFlag.RookPromotion:
-            case MoveFlag.QueenPromotion:
+            case KnightPromotion:
+            case BishopPromotion:
+            case RookPromotion:
+            case QueenPromotion:
                 UnmakePromotion(board);
                 break;
-            case MoveFlag.KnightPromotionCapture:
-            case MoveFlag.BishopPromotionCapture:
-            case MoveFlag.RookPromotionCapture:
-            case MoveFlag.QueenPromotionCapture:
+            case KnightPromotionCapture:
+            case BishopPromotionCapture:
+            case RookPromotionCapture:
+            case QueenPromotionCapture:
                 UnmakePromotionCapture(board);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
 
+        board.Info = _prevInfo;
         if (board.ToMove == ColorType.White) board.FullMoves--;
         board.SwapToMove();
-        board.SetHalfMoves((byte)(board.GetHalfMoves() - 1));
     }
 
-    private void MakeCastle(CBoard board)
+    private void UpdateCastlingRights(CBoard board)
     {
-        MakeQuiet(board, GetFrom(), GetTo());
-        if (CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite)
+        if (GetFromPieceType() == WhiteKing)
         {
-            if (GetFlags() == MoveFlag.KingCastle) MakeQuiet(board, H1, F1);
-            else MakeQuiet(board, A1, D1);
-        }
-        else
-        {
-            if (GetFlags() == MoveFlag.KingCastle) MakeQuiet(board, H8, F8);
-            else MakeQuiet(board, A8, D8);
-        }
-    }
-
-    private void UnmakeCastle(CBoard board)
-    {
-        MakeQuiet(board, GetTo(), GetFrom());
-        if (CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite)
-            if (GetFlags() == MoveFlag.KingCastle) MakeQuiet(board, F1, H1);
-            else MakeQuiet(board, D1, A1);
-        else if (GetFlags() == MoveFlag.KingCastle) MakeQuiet(board, F8, H8);
-        else MakeQuiet(board, D8, A8);
-    }
-
-    private void MakePromotion(CBoard board)
-    {
-        ulong from = CSquares.One << GetFrom();
-        ulong to = CSquares.One << GetTo();
-        ulong fromTo = from ^ to;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= from;
-        if (GetFlags() == MoveFlag.KnightPromotion)
-            board.SetSquare(EnumPiece.NKnight, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.BishopPromotion)
-            board.SetSquare(EnumPiece.NBishop, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.RookPromotion)
-            board.SetSquare(EnumPiece.NRook, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.QueenPromotion) board.SetSquare(EnumPiece.NQueen, (CSquare)GetTo(), true);
-    }
-
-    private void UnmakePromotion(CBoard board)
-    {
-        ulong from = CSquares.One << GetTo();
-        ulong to = CSquares.One << GetFrom();
-        ulong fromTo = from ^ to;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        if (GetFlags() == MoveFlag.KnightPromotion)
-            board.SetSquare(EnumPiece.NKnight, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.BishopPromotion)
-            board.SetSquare(EnumPiece.NBishop, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.RookPromotion)
-            board.SetSquare(EnumPiece.NRook, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.QueenPromotion) board.SetSquare(EnumPiece.NQueen, (CSquare)GetTo(), false);
-        board.PieceBb[(byte)EnumPiece.NPawn] ^= to;
-    }
-
-    private void MakePromotionCapture(CBoard board)
-    {
-        ulong from = CSquares.One << GetFrom();
-        ulong to = CSquares.One << GetTo();
-        ulong fromTo = from ^ to;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= from;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetToPieceType())] ^= to;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetToPieceType())] ^= to;
-        if (GetFlags() == MoveFlag.KnightPromotionCapture)
-            board.SetSquare(EnumPiece.NKnight, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.BishopPromotionCapture)
-            board.SetSquare(EnumPiece.NBishop, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.RookPromotionCapture)
-            board.SetSquare(EnumPiece.NRook, (CSquare)GetTo(), true);
-        else if (GetFlags() == MoveFlag.QueenPromotionCapture)
-            board.SetSquare(EnumPiece.NQueen, (CSquare)GetTo(), true);
-    }
-
-    private void UnmakePromotionCapture(CBoard board)
-    {
-        ulong from = CSquares.One << GetTo();
-        ulong to = CSquares.One << GetFrom();
-        ulong fromTo = from ^ to;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        if (GetFlags() == MoveFlag.KnightPromotion)
-            board.SetSquare(EnumPiece.NKnight, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.BishopPromotion)
-            board.SetSquare(EnumPiece.NBishop, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.RookPromotion)
-            board.SetSquare(EnumPiece.NRook, (CSquare)GetTo(), false);
-        else if (GetFlags() == MoveFlag.QueenPromotion) board.SetSquare(EnumPiece.NQueen, (CSquare)GetTo(), false);
-        board.PieceBb[(byte)EnumPiece.NPawn] ^= to;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetToPieceType())] ^= from;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetToPieceType())] ^= from;
-    }
-
-    private void MakeQuiet(CBoard board, CSquare from, CSquare to) => MakeQuiet(board, (byte)from, (byte)to);
-
-    private void MakeQuiet(CBoard board, byte fromB, byte toB)
-    {
-        ulong from = CSquares.One << fromB;
-        ulong to = CSquares.One << toB;
-        ulong fromTo = from ^ to;
-        PieceType type = board.GetPieceType(fromB);
-        board.PieceBb[(byte)CBoard.GetEnumPiece(type)] ^= fromTo;
-        board.PieceBb[(byte)CBoard.GetColorPiece(type)] ^= fromTo;
-        if (type == WhiteKing)
-        {
-            //Console.WriteLine(this);
             board.SetWhiteCastleKing(false);
             board.SetWhiteCastleQueen(false);
         }
-        else if (type == BlackKing)
+        else if (GetFromPieceType() == BlackKing)
         {
             board.SetBlackCastleKing(false);
             board.SetBlackCastleQueen(false);
         }
-
-        if (CBoard.GetEnumPiece(type) != EnumPiece.NRook) return;
-        switch ((CSquare)fromB)
-        {
-            case A1:
-                board.SetWhiteCastleQueen(false);
-                break;
-            case H1:
-                board.SetWhiteCastleKing(false);
-                break;
-            case A8:
-                board.SetBlackCastleQueen(false);
-                break;
-            case H8:
-                board.SetBlackCastleKing(false);
-                break;
-        }
-    }
-
-    private void MakeDoublePawnPush(CBoard board, byte from, byte to)
-    {
-        MakeQuiet(board, from, to);
-        board.SetEp(CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite ? from + 8 : from - 8);
-    }
-
-    private void MakeCapture(CBoard board)
-    {
-        ulong from = CSquares.One << GetFrom();
-        ulong to = CSquares.One << GetTo();
-        ulong fromTo = from ^ to;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= fromTo;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        board.PieceBb[(byte)CBoard.GetEnumPiece(GetToPieceType())] ^= to;
-        board.PieceBb[(byte)CBoard.GetColorPiece(GetToPieceType())] ^= to;
-        if (CBoard.GetEnumPiece(GetToPieceType()) != EnumPiece.NRook) return;
+        
         switch ((CSquare)GetTo())
         {
             case A1:
@@ -377,6 +257,107 @@ public class CMove
                 board.SetBlackCastleKing(false);
                 break;
         }
+
+        if (CBoard.GetEnumPiece(GetFromPieceType()) != NRook) return;
+        switch ((CSquare)GetFrom())
+        {
+            case A1:
+                board.SetWhiteCastleQueen(false);
+                break;
+            case H1:
+                board.SetWhiteCastleKing(false);
+                break;
+            case A8:
+                board.SetBlackCastleQueen(false);
+                break;
+            case H8:
+                board.SetBlackCastleKing(false);
+                break;
+        }
+    }
+
+    private void MakeCastle(CBoard board)
+    {
+        MakeQuiet(board, GetFrom(), GetTo(), GetFromPieceType());
+        if (CBoard.GetColorPiece(GetFromPieceType()) == NWhite)
+        {
+            if (GetFlags() == KingCastle) MakeQuiet(board, H1, F1, WhiteRook);
+            else MakeQuiet(board, A1, D1, WhiteRook);
+        }
+        else if (GetFlags() == KingCastle) MakeQuiet(board, H8, F8, BlackRook);
+        else MakeQuiet(board, A8, D8, BlackRook);
+    }
+
+    private void UnmakeCastle(CBoard board)
+    {
+        MakeQuiet(board, GetTo(), GetFrom(), GetFromPieceType());
+        if (CBoard.GetColorPiece(GetFromPieceType()) == NWhite)
+            if (GetFlags() == KingCastle) MakeQuiet(board, F1, H1, WhiteRook);
+            else MakeQuiet(board, D1, A1, WhiteRook);
+        else if (GetFlags() == KingCastle) MakeQuiet(board, F8, H8, BlackRook);
+        else MakeQuiet(board, D8, A8, BlackRook);
+    }
+
+    private void MakePromotion(CBoard board)
+    {
+        ulong to = CSquares.One << GetTo();
+        MakeQuiet(board);
+        board.PieceBb[(byte)NPawn] ^= to;
+        board.PieceBb[(byte)GetFlags() - 5] ^= to;
+    }
+
+    private void UnmakePromotion(CBoard board)
+    {
+        ulong to = CSquares.One << GetTo();
+        board.PieceBb[(byte)GetFlags() - 5] ^= to;
+        board.PieceBb[(byte)NPawn] ^= to;
+        UnmakeQuiet(board);
+    }
+
+    private void MakePromotionCapture(CBoard board)
+    {
+        ulong to = CSquares.One << GetTo();
+        MakeCapture(board);
+        board.PieceBb[(byte)NPawn] ^= to;
+        board.PieceBb[(byte)GetFlags() - 9] ^= to;
+    }
+
+    private void UnmakePromotionCapture(CBoard board)
+    {
+        ulong to = CSquares.One << GetTo();
+        board.PieceBb[(byte)GetFlags() - 9] ^= to;
+        board.PieceBb[(byte)NPawn] ^= to;
+        UnmakeCapture(board);
+    }
+
+    private void MakeQuiet(CBoard board) => MakeQuiet(board, GetFrom(), GetTo(), GetFromPieceType());
+    private void UnmakeQuiet(CBoard board) => MakeQuiet(board, GetTo(), GetFrom(), GetFromPieceType());
+    private void MakeQuiet(CBoard board, CSquare from, CSquare to, PieceType fromPieceType) => MakeQuiet(board, (byte)from, (byte)to, fromPieceType);
+
+    private void MakeQuiet(CBoard board, byte fromB, byte toB, PieceType fromPieceType)
+    {
+        ulong from = CSquares.One << fromB;
+        ulong to = CSquares.One << toB;
+        ulong fromTo = from ^ to;
+        board.PieceBb[(byte)CBoard.GetEnumPiece(fromPieceType)] ^= fromTo;
+        board.PieceBb[(byte)CBoard.GetColorPiece(fromPieceType)] ^= fromTo;
+    }
+
+    private void MakeDoublePawnPush(CBoard board, byte from, byte to)
+    {
+        MakeQuiet(board, from, to, GetFromPieceType());
+        board.SetEp(CBoard.GetColorPiece(GetFromPieceType()) == NWhite ? from + 8 : from - 8);
+    }
+
+    private void MakeCapture(CBoard board)
+    {
+        ulong from = CSquares.One << GetFrom();
+        ulong to = CSquares.One << GetTo();
+        ulong fromTo = from ^ to;
+        board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= fromTo;
+        board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
+        board.PieceBb[(byte)CBoard.GetEnumPiece(GetToPieceType())] ^= to;
+        board.PieceBb[(byte)CBoard.GetColorPiece(GetToPieceType())] ^= to;
     }
 
     private void UnmakeCapture(CBoard board)
@@ -397,15 +378,15 @@ public class CMove
         ulong fromTo = from ^ to;
         board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= fromTo;
         board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        if (CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite)
+        if (CBoard.GetColorPiece(GetFromPieceType()) == NWhite)
         {
-            board.PieceBb[(byte)EnumPiece.NPawn] ^= CSquares.One << (GetTo() - 8);
-            board.PieceBb[(byte)EnumPiece.NBlack] ^= CSquares.One << (GetTo() - 8);
+            board.PieceBb[(byte)NPawn] ^= CSquares.One << (GetTo() - 8);
+            board.PieceBb[(byte)NBlack] ^= CSquares.One << (GetTo() - 8);
         }
         else
         {
-            board.PieceBb[(byte)EnumPiece.NPawn] ^= CSquares.One << (GetTo() + 8);
-            board.PieceBb[(byte)EnumPiece.NWhite] ^= CSquares.One << (GetTo() + 8);
+            board.PieceBb[(byte)NPawn] ^= CSquares.One << (GetTo() + 8);
+            board.PieceBb[(byte)NWhite] ^= CSquares.One << (GetTo() + 8);
         }
     }
 
@@ -416,15 +397,15 @@ public class CMove
         ulong fromTo = from ^ to;
         board.PieceBb[(byte)CBoard.GetEnumPiece(GetFromPieceType())] ^= fromTo;
         board.PieceBb[(byte)CBoard.GetColorPiece(GetFromPieceType())] ^= fromTo;
-        if (CBoard.GetColorPiece(GetFromPieceType()) == EnumPiece.NWhite)
+        if (CBoard.GetColorPiece(GetFromPieceType()) == NWhite)
         {
-            board.PieceBb[(byte)EnumPiece.NPawn] ^= CSquares.One << (GetTo() - 8);
-            board.PieceBb[(byte)EnumPiece.NBlack] ^= CSquares.One << (GetTo() - 8);
+            board.PieceBb[(byte)NPawn] ^= CSquares.One << (GetTo() - 8);
+            board.PieceBb[(byte)NBlack] ^= CSquares.One << (GetTo() - 8);
         }
         else
         {
-            board.PieceBb[(byte)EnumPiece.NPawn] ^= CSquares.One << (GetTo() + 8);
-            board.PieceBb[(byte)EnumPiece.NWhite] ^= CSquares.One << (GetTo() + 8);
+            board.PieceBb[(byte)NPawn] ^= CSquares.One << (GetTo() + 8);
+            board.PieceBb[(byte)NWhite] ^= CSquares.One << (GetTo() + 8);
         }
     }
 
@@ -448,6 +429,9 @@ public class CMove
             BlackKing => '\u2654',
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    private static bool IsCapture(MoveFlag flag) => flag is Capture or EpCapture or KnightPromotionCapture
+        or BishopPromotionCapture or RookPromotionCapture or QueenPromotionCapture;
 }
 
 public enum MoveFlag : byte

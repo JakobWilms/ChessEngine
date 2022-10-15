@@ -1,8 +1,7 @@
 ﻿using Avalonia;
 using System;
-using Chess;
 
-namespace ChessEngine
+namespace Chess
 {
     class Program
     {
@@ -12,7 +11,7 @@ namespace ChessEngine
         [STAThread]
         public static void Main(string[] args)
         {
-            Chess.MainWindow.Args = args;
+            MainWindow.Args = args.Length == 0 ? new []{"/home/jakob/RiderProjects/Chess/resources/", "n", "r"} : args;
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }

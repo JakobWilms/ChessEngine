@@ -1,5 +1,4 @@
 using System;
-using ChessEngine;
 using static Chess.CAttackMap;
 using static Chess.CSquares;
 using static Chess.EnumPiece;
@@ -20,6 +19,16 @@ public class CBoard
         ToMove = ColorType.White;
         Info = 0xf000;
         FullMoves = 0;
+    }
+
+    public CBoard Copy()
+    {
+        CBoard board = new CBoard();
+        for (int i = 0; i < 8; i++) board.PieceBb[i] = PieceBb[i];
+        board.ToMove = ToMove;
+        board.Info = Info;
+        board.FullMoves = FullMoves;
+        return board;
     }
 
     public ColorType NotToMove() => (ColorType)(1 - (byte)ToMove);
@@ -55,7 +64,7 @@ public class CBoard
     public ulong GetKings() => PieceBb[(byte)NKing];
 
     public bool GetPiece(byte square) => (GetOccupied() & (One << square)) != 0;
-    
+
     public bool GetPiece(CSquare square) =>
         GetPiece((byte)square);
 
@@ -123,7 +132,7 @@ public class CBoard
 
     public void SetEp(int square)
     {
-        Info &= 0xf030;
+        Info &= 0xf03f;
         Info |= (ushort)(square << 6);
     }
 
@@ -131,16 +140,17 @@ public class CBoard
 
     public void SetHalfMoves(byte halfMoves)
     {
-        Info &= 0xffa0;
+        //if (halfMoves >= 2) throw new Exception();
+        Info &= 0xffc0;
         Info |= (ushort)(halfMoves & 0x3f);
     }
 
     public bool GetOccupied(CSquare square) => GetOccupied((byte)square);
-    
+
     public bool GetOccupied(byte square) => ((One << square) & GetOccupied()) != 0;
 
     public ColorType GetColor(CSquare square) => GetColor((byte)square);
-    
+
     public ColorType GetColor(byte square) =>
         (GetWhite() & (One << square)) != 0 ? ColorType.White :
         (GetBlack() & (One << square)) != 0 ? ColorType.Black : ColorType.None;
@@ -148,18 +158,20 @@ public class CBoard
     public PieceType GetPieceType(byte square)
     {
         ulong shift = One << square;
-        if ((shift & GetOccupied()) == 0) return Empty;
+        if ((shift & (PieceBb[0] | PieceBb[1])) == 0) return Empty;
         if ((shift & PieceBb[2]) != 0) return (shift & PieceBb[0]) != 0 ? WhitePawn : BlackPawn;
         if ((shift & PieceBb[3]) != 0) return (shift & PieceBb[0]) != 0 ? WhiteKnight : BlackKnight;
         if ((shift & PieceBb[4]) != 0) return (shift & PieceBb[0]) != 0 ? WhiteBishop : BlackBishop;
         if ((shift & PieceBb[5]) != 0) return (shift & PieceBb[0]) != 0 ? WhiteRook : BlackRook;
         if ((shift & PieceBb[6]) != 0) return (shift & PieceBb[0]) != 0 ? WhiteQueen : BlackQueen;
         if ((shift & PieceBb[7]) != 0) return (shift & PieceBb[0]) != 0 ? WhiteKing : BlackKing;
-        throw new ArgumentOutOfRangeException();
+        throw new ArgumentOutOfRangeException(
+            $"Sq:{(CSquare)square}, OccW:{shift & PieceBb[0]}, OccB:{shift & PieceBb[1]}, NP:{shift & PieceBb[2]}, NN:{shift & PieceBb[3]}, NB:{shift & PieceBb[4]}, NR:{shift & PieceBb[5]}, NQ:{shift & PieceBb[6]}, NK:{shift & PieceBb[7]}",
+            (Exception?)null);
     }
 
     public EnumPiece GetEnumPiece(CSquare square) => GetEnumPiece((byte)square);
-    
+
     public EnumPiece GetEnumPiece(byte square)
     {
         if (!GetOccupied(square)) throw new ArgumentOutOfRangeException();
@@ -187,15 +199,34 @@ public class CBoard
         return (CAttacks.RookAttacks(GetOccupied(), square) & rooksQueens) != 0;
     }
 
+    private const ulong K1 = 0x5555555555555555;
+    private const ulong K2 = 0x3333333333333333;
+    private const ulong K4 = 0x0f0f0f0f0f0f0f0f;
+    private const ulong Kf = 0x0101010101010101;
+
+    public byte PopCount(PieceType pieceType) => PopCount(GetPieceSet(pieceType));
+
+    public byte PopCount(int i) => PopCount((PieceType)i);
+
+    private byte PopCount(ulong u)
+    {
+        if (u == 0) return 0;
+        u -= ((u >> 1) & K1);
+        u = (u & K2) + ((u >> 2) & K2);
+        u = (u + (u >> 4)) & K4;
+        u = (u * Kf) >> 56;
+        return (byte)u;
+    }
+
     public bool InCheck(PieceType type) => InCheck((ColorType)ColorCode(type));
 
     public bool InCheck(ColorType side)
     {
         if (side == ColorType.None) throw new ArgumentOutOfRangeException();
-        return Attacked((CSquare)CAttacks.BitScanForwardIsolatedLs1B(GetKings() & PieceBb[(byte)side]), 1 - side);
+        return Attacked((CSquare)CUtils.BitScanForwardIsolatedLs1B(GetKings() & PieceBb[(byte)side]), 1 - side);
     }
 
-    public  static EnumPiece GetEnumPiece(PieceType pieceType) =>
+    public static EnumPiece GetEnumPiece(PieceType pieceType) =>
         pieceType switch
         {
             WhitePawn => NPawn,

@@ -5,6 +5,9 @@ namespace Chess;
 
 public abstract class Engine
 {
+    
+    protected static readonly int[] PieceValues = { 100, 100, 320, 320, 330, 330, 500, 500, 900, 900, 20000, 20000 };
+    
     public static Engine? White { get; private set; }
     public static Engine? Black { get; private set; }
 
@@ -26,15 +29,19 @@ public abstract class Engine
     public static void ReadEngines(string[] args)
     {
         if (args.Length < 2) return;
-        White = FromCode(args[1][0], ColorType.White);
-        Black = FromCode(args[2][0], ColorType.Black);
+        White = FromCode(args[1], ColorType.White);
+        Black = FromCode(args[2], ColorType.Black);
     }
     
-    private static Engine? FromCode(char code, ColorType color) =>
+    private static Engine? FromCode(string code, ColorType color) =>
         code switch
         {
-            'r' => new RandomEngine(color),
-            'n' => null,
+            "r" => new RandomEngine(color),
+            "e" => new MainEngine(color),
+            "m" => new MaterialEngine(color),
+            "mab" => new MaterialAlphaBetaEngine(color),
+            "c" => new CaptureEngine(color),
+            "n" => null,
             _ => throw new InvalidOperationException()
         };
 }

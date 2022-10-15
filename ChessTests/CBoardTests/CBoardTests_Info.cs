@@ -28,6 +28,10 @@ public class CBoardTestsInfo
         board.SetEnPassantTargetSquare(CSquare.A3);
         
         Assert.AreEqual(CSquare.A3, board.GetEp());
+        
+        board.SetEp((int)CSquare.B6);
+        
+        Assert.AreEqual(CSquare.B6, board.GetEp());
     }
     
     [Test]

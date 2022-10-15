@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using ChessEngine;
 
 namespace Chess;
 
@@ -81,7 +80,6 @@ public class CDisplay
 
     private void UpdateMoveList(CMove move)
     {
-
         _moveList.Add(move);
         if (_moveList.Count % 2 == 0)
         {
@@ -95,7 +93,7 @@ public class CDisplay
 
         UpdateMoveList();
     }
-    
+
     private void UpdateMoveList()
     {
         _window.MoveListFullMoves.Text = string.Join('\n', _moveOutputList[0]);
@@ -115,8 +113,8 @@ public class CDisplay
         {
             _moveOutputList[1].RemoveAt(_moveOutputList[1].Count - 1);
             _moveOutputList[0].RemoveAt(_moveOutputList[0].Count - 1);
-            
         }
+
         _moveList.RemoveAt(_moveList.Count - 1);
         UpdateMoveList();
         Display();

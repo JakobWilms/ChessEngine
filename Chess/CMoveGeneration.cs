@@ -25,7 +25,7 @@ public static class CMoveGeneration
                     !board.Attacked(F1, board.NotToMove()) &&
                     !board.Attacked(G1, board.NotToMove()))
                 {
-                    Console.WriteLine("King Castle Push");
+                    //Console.WriteLine("King Castle Push");
                     moveCount += MoveGenPush(E1, G1, MoveFlag.KingCastle, WhiteKing, Empty, moves, board);
                 }
 
@@ -157,6 +157,7 @@ public static class CMoveGeneration
     {
         //Console.WriteLine($"Push: {fromPiece.ToString()}");
         short moveCount = 0;
+        List<CMove> movesToAdd = new List<CMove>();
         CMove move = new CMove(from, to, flags, fromPiece, toPiece);
         if (fromPiece is WhitePawn or BlackPawn && to == board.GetEp() && board.GetEp() != A1) // En passant Capture
         {
@@ -164,6 +165,14 @@ public static class CMoveGeneration
             move.SetFlags(MoveFlag.EpCapture);
         }
 
+        if (fromPiece is BlackPawn or WhitePawn && RowOf(to) is 0 or 7) // Pawn Promotion
+        {
+            int add = toPiece == Empty ? 8 : 12;
+            for (int i = 0; i < 4; i++) movesToAdd.Add(new CMove(from, to, (MoveFlag)(add + i), fromPiece, toPiece));
+            moveCount += 3;
+        }
+        else movesToAdd.Add(move);
+        
         if (flags != MoveFlag.KingCastle && flags != MoveFlag.QueenCastle)
         {
             move.Make(board); // Verify Legal Move
@@ -183,14 +192,8 @@ public static class CMoveGeneration
 
             move.Unmake(board);
         }
-
-        if (fromPiece is BlackPawn or WhitePawn && RowOf(to) is 0 or 7) // Pawn Promotion
-        {
-            int add = toPiece == Empty ? 8 : 12;
-            for (int i = 0; i < 4; i++) moves.Add(new CMove(from, to, (MoveFlag)(add + i), fromPiece, toPiece));
-            moveCount += 3;
-        }
-        else moves.Add(move);
+        
+        moves.AddRange(movesToAdd);
 
         moveCount++;
         return moveCount;
