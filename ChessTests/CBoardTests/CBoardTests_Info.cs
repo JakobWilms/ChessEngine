@@ -1,3 +1,4 @@
+using System;
 using Chess;
 using NUnit.Framework;
 
@@ -11,7 +12,14 @@ public class CBoardTestsInfo
     [SetUp]
     public void SetUp()
     {
-        board = new CBoard();
+        board = FenReader.ImportFen(FenReader.StartingFen);
+    }
+    
+    [Test]
+    public void ToDisplayString()
+    {
+        Console.WriteLine(board.ToDisplayString());
+        Assert.True(true);
     }
     
     [Test]

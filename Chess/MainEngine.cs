@@ -6,16 +6,16 @@ public class MainEngine : AlphaBetaEngine
     private const int RookPairValue = -10;
     private const int KnightPairValue = -10;
 
-    protected override int Evaluate(CBoard board)
+    public override int Evaluate(CBoard board)
     {
         int evaluation = 0;
-        evaluation += 10 * EvaluateMaterial(board);
+        evaluation += EvaluateMaterial(board);
         evaluation += EvaluatePieceSquares(board);
 
         return board.ToMove == ColorType.White ? evaluation : -evaluation;
     }
 
-    private int EvaluatePieceSquares(CBoard board)
+    public int EvaluatePieceSquares(CBoard board)
     {
         int evaluation = 0;
         for (int i = 0; i < 12; i++)
@@ -53,9 +53,5 @@ public class MainEngine : AlphaBetaEngine
         if (popCount[7] >= 2) evaluation -= RookPairValue;
 
         return evaluation;
-    }
-
-    public MainEngine(ColorType color) : base(color)
-    {
     }
 }

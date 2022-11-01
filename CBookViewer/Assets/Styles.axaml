@@ -20,72 +20,6 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
 
-    <Style Selector="UniformGrid.center">
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="TextBlock.center">
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="TextBlock.color">
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-    </Style>
-
-    <Style Selector="ScrollViewer.hiddenScrollBar">
-        <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
-    </Style>
-
-    <Style Selector="TextBlock.centerContent">
-        <Setter Property="TextAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="ContentPresenter.centerContent">
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="ContentControl.centerContent">
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="Border.color">
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-    </Style>
-
-    <Style Selector="Border#MoveListBorder">
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="15" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <Setter Property="Padding" Value="0, 7" />
-    </Style>
-
-    <Style Selector="TextBlock.moveList">
-        <Setter Property="Padding" Value="0, 7" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="20" />
-    </Style>
-
-    <Style Selector="TextBlock#MoveListFullMoves">
-        <Setter Property="Padding" Value="0, 7" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="21" />
-    </Style>
-
     <Style Selector="TextBox">
         <Setter Property="Foreground" Value="{StaticResource Foreground}" />
         <Setter Property="Background" Value="{StaticResource Background}" />
@@ -152,5 +86,10 @@
         <Setter Property="FontSize" Value="25"></Setter>
     </Style>
 
-
+    <Style Selector="ItemsRepeater">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+    </Style>
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+    </Style>
 </Styles>

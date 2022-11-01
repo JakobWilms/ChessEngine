@@ -11,24 +11,48 @@
     <Window.Styles>
         <StyleInclude Source="/Assets/Styles.axaml"></StyleInclude>
     </Window.Styles>
-    
+
     <Grid Name="MainGrid" ColumnDefinitions="7*,10*,7*" RowDefinitions="7*, 40*, 7*" Classes="stretch"
           ShowGridLines="False">
-        <Grid Name="TopBoardGrid" Grid.Row="0" Grid.Column="1" RowDefinitions="2*,5*"
+
+        <Grid Name="TopGrid" Grid.Row="0" Grid.Column="1" RowDefinitions="2*,5*"
               Classes="stretch">
-            <Grid Name="FenGrid" Grid.Row="0" ColumnDefinitions="*,35*,*,5*,*"
+            <Grid Name="FenGrid" Grid.Row="0" ColumnDefinitions="*,5*,*,35*,*,5*,*"
                   Classes="stretch">
-                <TextBox Grid.Column="1" Name="FenBox" Classes="centerContent" />
-                <Button Name="FenButton" Grid.Column="3" Classes="color centerContent stretch">
+                <Button Name="ResetButton" Grid.Column="1" Classes="color centerContent stretch">
+                    Reset!
+                </Button>
+                <TextBox Grid.Column="3" Name="FenBox" Classes="centerContent" />
+                <Button Name="FenButton" Grid.Column="5" Classes="color centerContent stretch">
                     Import!
                 </Button>
             </Grid>
         </Grid>
-        
+
+        <Grid Name="LeftGrid" Grid.Column="0" Grid.Row="1" Classes="stretch" ColumnDefinitions="*" RowDefinitions="*">
+
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="0" Name="TopLeftGrid" Classes="stretch" RowDefinitions="*,15*,*,15*,*"
+              ColumnDefinitions="*,15*,*,15*,*">
+            <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Classes="stretch color">
+                <ScrollViewer Classes="stretch">
+                    <TextBlock Name="OpeningBlock" Classes="stretch color center centerContent" />
+                </ScrollViewer>
+            </Border>
+            <Border Grid.Column="3" Grid.Row="1" Classes="stretch color">
+                <TextBlock Name="NodesTextBlock" Classes="stretch center color centerContent" />
+            </Border>
+            <Border Grid.Column="3" Grid.Row="3" Classes="stretch color">
+                <TextBlock Name="DepthTextBlock" Classes="stretch center color centerContent" />
+            </Border>
+        </Grid>
+
         <UniformGrid Grid.Row="1" Grid.Column="1" Name="Board" Background="#363532"
                      Columns="8" Width="{Binding #Board.Height}"
-                     Classes="center"></UniformGrid>
-        
+                     Classes="center">
+        </UniformGrid>
+
         <Grid Grid.Row="1" Grid.Column="2" ColumnDefinitions="3*,50*,3*" RowDefinitions="6*,74*" Classes="stretch">
             <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,30*,*" RowDefinitions="*,10*,*" Classes="stretch">
                 <Button Grid.Column="1" Grid.Row="1" Classes="color centerContent stretch" Name="PreviousMoveButton">&#x2baa;</Button>
@@ -49,6 +73,7 @@
                 </Grid>
             </Border>
         </Grid>
+
         <Grid Grid.Row="2" Grid.Column="2" Name="BottomRightGrid" ColumnDefinitions="5*,2*" RowDefinitions="2*,5*"
               Classes="stretch">
             <Grid Grid.Row="1" Grid.Column="0" Name="BPromotionGrid" RowDefinitions="*" ColumnDefinitions="*,*,*,*"
@@ -59,6 +84,7 @@
                 <Image Grid.Column="3" Name="BQueenPromotion" Classes="stretch"></Image>
             </Grid>
         </Grid>
+
         <Grid Grid.Row="0" Grid.Column="2" Name="TopRightGrid" ColumnDefinitions="5*,2*" RowDefinitions="5*,2*"
               Classes="stretch">
             <Grid Grid.Row="0" Grid.Column="0" Name="WPromotionGrid" RowDefinitions="*" ColumnDefinitions="*,*,*,*"

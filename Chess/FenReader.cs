@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using static Chess.PieceType;
@@ -51,6 +50,7 @@ public static class FenReader
         board.SetHalfMoves(byte.Parse(split[4]));
         board.FullMoves = ushort.Parse(split[5]);
 
+        board.Zobrist.Import(board);
         return board;
     }
 
@@ -83,11 +83,11 @@ public static class FenReader
             bcq = board.GetBlackCastleQueen();
         if (!wck && !wcq && !bck && !bcq) builder.Append('-');
         else
-            builder.Append(wck ? 'K' : "")
-                .Append(bck ? 'k' : "")
-                .Append(wcq ? 'Q' : "")
-                .Append(bcq ? 'q' : "");
-        builder.Append(' ').Append(board.GetEp() == CSquare.A1 ? '-' : board.GetEp().ToString());
+            builder.Append(wck ? "K" : "")
+                .Append(bck ? "k" : "")
+                .Append(wcq ? "Q" : "")
+                .Append(bcq ? "q" : "");
+        builder.Append(' ').Append(board.GetEp() == CSquare.A1 ? "-" : board.GetEp().ToString());
         builder.Append(' ').Append(board.GetHalfMoves()).Append(' ').Append(board.FullMoves);
 
         return builder.ToString();
@@ -111,7 +111,7 @@ public static class FenReader
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    private static char FenCharFromPieceType(PieceType pieceType) =>
+    public static char FenCharFromPieceType(PieceType pieceType) =>
         pieceType switch
         {
             WhitePawn => 'P',
@@ -126,6 +126,6 @@ public static class FenReader
             BlackQueen => 'q',
             WhiteKing => 'K',
             BlackKing => 'k',
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ' '
         };
 }

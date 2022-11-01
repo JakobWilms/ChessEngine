@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using static Chess.CDoubleDir;
 using static Chess.CSquare;
 using static Chess.CSquares;
@@ -9,15 +7,32 @@ namespace Chess;
 
 public static class CMoveGeneration
 {
-    public static List<CMove> MoveGen(CBoard board)
+
+    public static ushort MoveGenCount(CBoard board) => MoveGenCount(MoveGen(board));
+
+    public static ushort MoveGenCount(CMove?[] moves)
     {
-        List<CMove> moves = new List<CMove>();
-        short moveCount = 0;
+        ushort count = 0;
+        for (var index = 0; index < moves.Length; index++)
+        {
+            var move = moves[index];
+            if (move == null) break;
+            count++;
+        }
+
+        return count;
+    }
+    
+    public static CMove?[] MoveGen(CBoard board)
+    {
+        CMove[] moves = new CMove[128];
+        CMove[] movesToAdd = new CMove[4];
+        ushort index = 0;
         //castling
         if (board.ToMove == ColorType.White)
         {
             //Console.WriteLine(
-                //$"{board.GetPiece(F1)} {board.GetPiece(G1)} {board.Attacked(E1, board.NotToMove())} {board.Attacked(F1, board.NotToMove())} {board.Attacked(G1, board.NotToMove())}");
+            //$"{board.GetPiece(F1)} {board.GetPiece(G1)} {board.Attacked(E1, board.NotToMove())} {board.Attacked(F1, board.NotToMove())} {board.Attacked(G1, board.NotToMove())}");
             //Console.WriteLine($"{board.GetWhiteCastleKing()}");
             if (board.GetWhiteCastleKing())
                 if (!board.GetPiece(F1) && !board.GetPiece(G1) &&
@@ -26,7 +41,7 @@ public static class CMoveGeneration
                     !board.Attacked(G1, board.NotToMove()))
                 {
                     //Console.WriteLine("King Castle Push");
-                    moveCount += MoveGenPush(E1, G1, MoveFlag.KingCastle, WhiteKing, Empty, moves, board);
+                    index = MoveGenPush(E1, G1, MoveFlag.KingCastle, WhiteKing, Empty, moves, board, index, movesToAdd);
                 }
 
             if (board.GetWhiteCastleQueen())
@@ -34,8 +49,8 @@ public static class CMoveGeneration
                     !board.Attacked(C1, board.NotToMove()) &&
                     !board.Attacked(D1, board.NotToMove()) &&
                     !board.Attacked(E1, board.NotToMove()))
-                    moveCount += MoveGenPush(E1, C1, MoveFlag.QueenCastle, WhiteKing, Empty, moves,
-                        board);
+                    index = MoveGenPush(E1, C1, MoveFlag.QueenCastle, WhiteKing, Empty, moves,
+                        board, index, movesToAdd);
         }
         else
         {
@@ -44,15 +59,15 @@ public static class CMoveGeneration
                     !board.Attacked(E8, board.NotToMove()) &&
                     !board.Attacked(F8, board.NotToMove()) &&
                     !board.Attacked(G8, board.NotToMove()))
-                    moveCount += MoveGenPush(E8, G8, MoveFlag.KingCastle, BlackKing, Empty, moves, board);
+                    index = MoveGenPush(E8, G8, MoveFlag.KingCastle, BlackKing, Empty, moves, board, index, movesToAdd);
 
             if (board.GetBlackCastleQueen())
                 if (!board.GetPiece(B8) && !board.GetPiece(C8) && !board.GetPiece(D8) &&
                     !board.Attacked(C8, board.NotToMove()) &&
                     !board.Attacked(D8, board.NotToMove()) &&
                     !board.Attacked(E8, board.NotToMove()))
-                    moveCount += MoveGenPush(E8, C8, MoveFlag.QueenCastle, BlackKing, Empty, moves,
-                        board);
+                    index = MoveGenPush(E8, C8, MoveFlag.QueenCastle, BlackKing, Empty, moves,
+                        board, index, movesToAdd);
         }
 
         for (byte sq = 0; sq < 64; sq++)
@@ -61,8 +76,8 @@ public static class CMoveGeneration
             //Console.WriteLine($"{board.GetPieceType(sq)} {sq}");
             if (board.GetPieceType(sq) is WhitePawn or BlackPawn) // Pawn Move
             {
-                moveCount += MoveGenPawnMove((CSquare)sq, moves, board);
-                moveCount += MoveGenPawnCapture((CSquare)sq, moves, board);
+                index = MoveGenPawnMove((CSquare)sq, moves, board, index, movesToAdd);
+                index = MoveGenPawnCapture((CSquare)sq, moves, board, index, movesToAdd);
             }
             else
             {
@@ -75,12 +90,12 @@ public static class CMoveGeneration
                         pos = (byte)(pos + Vectors[bPieceType - 3][dir]);
 
                         if (board.GetPieceType(pos) == Empty)
-                            moveCount += MoveGenPush((CSquare)sq, (CSquare)pos, MoveFlag.QuietMove,
-                                board.GetPieceType(sq), Empty, moves, board);
+                            index = MoveGenPush((CSquare)sq, (CSquare)pos, MoveFlag.QuietMove,
+                                board.GetPieceType(sq), Empty, moves, board, index, movesToAdd);
                         else if (board.GetColor(pos) == board.NotToMove())
                         {
-                            moveCount += MoveGenPush((CSquare)sq, (CSquare)pos, MoveFlag.Capture,
-                                board.GetPieceType(sq), board.GetPieceType(pos), moves, board);
+                            index = MoveGenPush((CSquare)sq, (CSquare)pos, MoveFlag.Capture,
+                                board.GetPieceType(sq), board.GetPieceType(pos), moves, board, index, movesToAdd);
                             break;
                         }
                         else break;
@@ -94,46 +109,45 @@ public static class CMoveGeneration
         return moves;
     }
 
-    private static short MoveGenPawnMove(CSquare from, List<CMove> moves, CBoard board)
+    private static ushort MoveGenPawnMove(CSquare from, CMove[] moves, CBoard board, ushort index, CMove?[] movesToAdd)
     {
-        short moveCount = 0;
         if (board.ToMove == ColorType.White)
         {
-            if (board.GetPieceType(AddDir(from, CDir.Nort)) == Empty)
+            if (board.GetPieceType(AddDir(from, CDir.North)) == Empty)
             {
-                moveCount += MoveGenPush(from, AddDir(from, CDir.Nort), MoveFlag.QuietMove, WhitePawn, Empty, moves,
-                    board);
+                index = MoveGenPush(from, AddDir(from, CDir.North), MoveFlag.QuietMove, WhitePawn, Empty, moves,
+                    board, index, movesToAdd);
                 if (RowOf(from) == 1 && board.GetPieceType(from + 16) == Empty)
-                    moveCount += MoveGenPush(from, (CSquare)((byte)from + 16), MoveFlag.DoublePawnPush, WhitePawn,
-                        Empty, moves, board);
+                    index = MoveGenPush(from, (CSquare)((byte)from + 16), MoveFlag.DoublePawnPush, WhitePawn,
+                        Empty, moves, board, index, movesToAdd);
             }
         }
-        else if (board.GetPieceType(AddDir(from, CDir.Sout)) == Empty)
+        else if (board.GetPieceType(AddDir(from, CDir.South)) == Empty)
         {
-            moveCount += MoveGenPush(from, AddDir(from, CDir.Sout), MoveFlag.QuietMove, BlackPawn, Empty, moves, board);
+            index = MoveGenPush(from, AddDir(from, CDir.South), MoveFlag.QuietMove, BlackPawn, Empty, moves, board,
+                index, movesToAdd);
             if (RowOf(from) == 6 && board.GetPieceType(from - 16) == Empty)
-                moveCount += MoveGenPush(from, (CSquare)((byte)from - 16), MoveFlag.DoublePawnPush, BlackPawn, Empty,
-                    moves, board);
+                index = MoveGenPush(from, (CSquare)((byte)from - 16), MoveFlag.DoublePawnPush, BlackPawn, Empty,
+                    moves, board, index, movesToAdd);
         }
 
-        return moveCount;
+        return index;
     }
 
-    private static short MoveGenPawnCapture(CSquare from, List<CMove> moves, CBoard board)
+    private static ushort MoveGenPawnCapture(CSquare from, CMove[] moves, CBoard board, ushort index, CMove?[] movesToAdd)
     {
-        short moveCount = 0;
         if (board.ToMove == ColorType.White)
         {
             CSquare nw = AddDir(from, CDir.NoWe);
             CSquare ne = AddDir(from, CDir.NoEa);
             if (IsSquare(from, CDir.NoWe) &&
                 (board.GetEp() == nw && board.GetEp() != A1 || board.GetColor(nw) == board.NotToMove()))
-                moveCount += MoveGenPush(from, nw, MoveFlag.Capture, WhitePawn,
-                    board.GetPieceType(nw), moves, board);
+                index = MoveGenPush(from, nw, MoveFlag.Capture, WhitePawn,
+                    board.GetPieceType(nw), moves, board, index, movesToAdd);
             if (IsSquare(from, CDir.NoEa) &&
                 (board.GetEp() == ne && board.GetEp() != A1 || board.GetColor(ne) == board.NotToMove()))
-                moveCount += MoveGenPush(from, ne, MoveFlag.Capture, WhitePawn,
-                    board.GetPieceType(ne), moves, board);
+                index = MoveGenPush(from, ne, MoveFlag.Capture, WhitePawn,
+                    board.GetPieceType(ne), moves, board, index, movesToAdd);
         }
         else
         {
@@ -141,38 +155,40 @@ public static class CMoveGeneration
             CSquare se = AddDir(from, CDir.SoEa);
             if (IsSquare(from, CDir.NoWe) &&
                 (board.GetEp() == sw && board.GetEp() != A1 || board.GetColor(sw) == board.NotToMove()))
-                moveCount += MoveGenPush(from, sw, MoveFlag.Capture, BlackPawn,
-                    board.GetPieceType(sw), moves, board);
+                index = MoveGenPush(from, sw, MoveFlag.Capture, BlackPawn,
+                    board.GetPieceType(sw), moves, board, index, movesToAdd);
             if (IsSquare(from, CDir.NoEa) &&
                 (board.GetEp() == se && board.GetEp() != A1 || board.GetColor(se) == board.NotToMove()))
-                moveCount += MoveGenPush(from, se, MoveFlag.Capture, BlackPawn,
-                    board.GetPieceType(se), moves, board);
+                index = MoveGenPush(from, se, MoveFlag.Capture, BlackPawn,
+                    board.GetPieceType(se), moves, board, index, movesToAdd);
         }
 
-        return moveCount;
+        return index;
     }
 
-    private static short MoveGenPush(CSquare from, CSquare to, MoveFlag flags, PieceType fromPiece, PieceType toPiece,
-        List<CMove> moves, CBoard board)
+    private static ushort MoveGenPush(CSquare from, CSquare to, MoveFlag flags, PieceType fromPiece, PieceType toPiece,
+        CMove[] moves, CBoard board, ushort index, CMove?[] movesToAdd)
     {
+        if (fromPiece == Empty) throw new ArgumentException();
+        if (index == 128) throw new IndexOutOfRangeException();
         //Console.WriteLine($"Push: {fromPiece.ToString()}");
-        short moveCount = 0;
-        List<CMove> movesToAdd = new List<CMove>();
-        CMove move = new CMove(from, to, flags, fromPiece, toPiece);
+        ushort myIndex = 0;
         if (fromPiece is WhitePawn or BlackPawn && to == board.GetEp() && board.GetEp() != A1) // En passant Capture
         {
-            move.SetToPiece(fromPiece == WhitePawn ? BlackPawn : WhitePawn);
-            move.SetFlags(MoveFlag.EpCapture);
+            flags = MoveFlag.EpCapture;
+            toPiece = fromPiece == WhitePawn ? BlackPawn : WhitePawn;
         }
+
+        CMove move = new CMove(from, to, flags, fromPiece, toPiece);
 
         if (fromPiece is BlackPawn or WhitePawn && RowOf(to) is 0 or 7) // Pawn Promotion
         {
             int add = toPiece == Empty ? 8 : 12;
-            for (int i = 0; i < 4; i++) movesToAdd.Add(new CMove(from, to, (MoveFlag)(add + i), fromPiece, toPiece));
-            moveCount += 3;
+            for (int i = 0; i < 4; i++) movesToAdd[i] = new CMove(from, to, (MoveFlag)(add + i), fromPiece, toPiece);
+            myIndex += 3;
         }
-        else movesToAdd.Add(move);
-        
+        else movesToAdd[0] = move;
+
         if (flags != MoveFlag.KingCastle && flags != MoveFlag.QueenCastle)
         {
             move.Make(board); // Verify Legal Move
@@ -181,22 +197,61 @@ public static class CMoveGeneration
                 if (board.InCheck(ColorType.White))
                 {
                     move.Unmake(board);
-                    return 0;
+                    return index;
                 }
             }
             else if (board.InCheck(ColorType.Black))
             {
                 move.Unmake(board);
-                return 0;
+                return index;
             }
 
             move.Unmake(board);
         }
-        
-        moves.AddRange(movesToAdd);
 
-        moveCount++;
-        return moveCount;
+        for (int i = 0; i <= myIndex; i++)
+        {
+            if (movesToAdd[i] == null) break;
+            moves[index + i] = movesToAdd[i]!;
+        }
+
+        index = (ushort)(index + myIndex + 1);
+
+        if (move.GetToPieceType() != Empty)
+            move.Score = (ushort)(move.GetToPiece() + (12 - move.GetFromPiece()));
+        for (int i = 0; i <= myIndex; i++) movesToAdd[i] = null;
+
+        return index;
+    }
+
+    public static CMove?[] Sort(CMove?[] moves, CMove? bestMove)
+    {
+        int best = -1;
+        Array.Sort(moves, (a, b) => (a, b) switch
+        {
+            (null, null) => 0,
+            (null, not null) => /*b.Score*/1,
+            (not null, null) => /*-a.Score*/-1,
+            (not null, not null) => /*b.Score - a.Score*/a.Score > b.Score ? -1 : 1
+        });
+        if (bestMove == null) return moves;
+
+        for (int i = 0; i < moves.Length; i++)
+            if (moves[i] == null) break;
+            else if (moves[i]!.GetFrom() == bestMove.GetFrom() && moves[i]!.GetTo() == bestMove.GetTo())
+                best = i;
+        if (best == -1) return moves;
+        CMove?[] returnValue = new CMove[moves.Length + 1];
+        returnValue[0] = bestMove;
+        for (int i = 0, pos = 1; i < moves.Length; i++, pos++)
+        {
+            if (moves[i] == null) continue;
+            if (!moves[i]!.Equals(bestMove))
+                returnValue[pos] = moves[i];
+            else pos--;
+        }
+
+        return moves;
     }
 
     private static bool Slide(EnumPiece piece) => piece is EnumPiece.NBishop or EnumPiece.NRook or EnumPiece.NQueen;

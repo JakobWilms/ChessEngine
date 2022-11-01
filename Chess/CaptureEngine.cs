@@ -1,42 +1,40 @@
-using System;
-using System.Collections.Generic;
+using Chess.Book;
 using static Chess.CDisplay;
 
 namespace Chess;
 
 public class CaptureEngine : Engine
 {
-
-    private readonly Random _random;
-    
-    public CaptureEngine(ColorType color) : base(color)
-    {
-        _random = new Random();
-    }
-
-    protected override CMove? FindMove()
+    protected override CMove? FindMove(CBookEntry? entry = null)
     {
         int bestScore = -0xfffffff;
-        List<CMove> bestMoves = new List<CMove>();
-        List<CMove> moves = CMoveGeneration.MoveGen(Instance.Board);
-        foreach (var move in moves)
+        CMove?[] bestMoves = new CMove[128];
+        ushort bestMoveIndex = 0;
+        CMove?[] moves = CMoveGeneration.MoveGen(Instance.Board);
+        for (ushort index = 0; index < moves.Length; index++)
         {
+            var move = moves[index];
+            if (move == null) break;
             move.Make(Instance.Board);
             int score = -Evaluate(Instance.Board);
             move.Unmake(Instance.Board);
             if (score == bestScore)
-                bestMoves.Add(move);
+            {
+                bestMoves[bestMoveIndex] = move;
+                bestMoveIndex++;
+            }
             else if (score > bestScore)
             {
                 bestScore = score;
-                bestMoves.Clear();
-                bestMoves.Add(move);
+                bestMoves = new CMove[128];
+                bestMoves[0] = move;
+                bestMoveIndex = 1;
             }
         }
 
-        return bestMoves.Count == 0 ? null : bestMoves.Count == 1 ? bestMoves[0] : bestMoves[_random.Next(bestMoves.Count)];
+        return FromMoveArray(bestMoves);
     }
-    
+
     private int Evaluate(CBoard board)
     {
         int evaluation = 0;

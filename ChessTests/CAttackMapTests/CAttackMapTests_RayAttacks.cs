@@ -10,8 +10,8 @@ public class CAttackMapTestsRayAttacks
     [Test]
     public void NorthAttacks_Correct()
     {
-        Assert.AreEqual(0x_0101_0101_0101_0100, CAttackMap.RayAttacks[(byte)A1][(byte)Nort]);
-        Assert.AreEqual(0x_0808_0808_0000_0000, CAttackMap.RayAttacks[(byte)D4][(byte)Nort]);
+        Assert.AreEqual(0x_0101_0101_0101_0100, CAttackMap.RayAttacks[(byte)A1][(byte)North]);
+        Assert.AreEqual(0x_0808_0808_0000_0000, CAttackMap.RayAttacks[(byte)D4][(byte)North]);
     }
     
     [Test]
@@ -24,8 +24,8 @@ public class CAttackMapTestsRayAttacks
     [Test]
     public void SouthAttacks_Correct()
     {
-        Assert.AreEqual(0x_0080_8080_8080_8080, CAttackMap.RayAttacks[(byte)H8][(byte)Sout]);
-        Assert.AreEqual(0x0000000000080808, CAttackMap.RayAttacks[(byte)D4][(byte)Sout]);
+        Assert.AreEqual(0x_0080_8080_8080_8080, CAttackMap.RayAttacks[(byte)H8][(byte)South]);
+        Assert.AreEqual(0x0000000000080808, CAttackMap.RayAttacks[(byte)D4][(byte)South]);
     }
     
     [Test]

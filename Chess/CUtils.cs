@@ -1,9 +1,23 @@
-using System;
-
 namespace Chess;
 
-public class CUtils
+public static class CUtils
 {
+    public static bool GetWhiteCastleKing(ushort info) => (info & 0x8000) >> 15 != 0;
+    public static bool GetWhiteCastleQueen(ushort info) => (info & 0x4000) >> 14 != 0;
+    public static bool GetBlackCastleKing(ushort info) => (info & 0x2000) >> 13 != 0;
+    public static bool GetBlackCastleQueen(ushort info) => (info & 0x1000) >> 12 != 0;
+
+    public static CastlingType[] GetCastlingTypes(ushort info, CastlingType[] types)
+    {
+        if (GetWhiteCastleKing(info)) types[0] = CastlingType.WhiteCastleKing;
+        if (GetWhiteCastleQueen(info)) types[1] = CastlingType.WhiteCastleQueen;
+        if (GetBlackCastleKing(info)) types[2] = CastlingType.BlackCastleKing;
+        if (GetBlackCastleQueen(info)) types[3] = CastlingType.BlackCastleQueen;
+        return types;
+    }
+
+    public static CSquare GetEnPassantTargetSquare(ushort info) => (CSquare)((info & 0xfc0) >> 6);
+
     public static byte BitScanForward(ulong bb)
     {
         if (bb == 0) throw new ArgumentOutOfRangeException();

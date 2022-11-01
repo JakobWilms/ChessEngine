@@ -3,23 +3,72 @@ using static Chess.CSquare;
 
 namespace Chess;
 
+/// <summary>
+/// The static class containing Arrays with the Attack Maps of all Pieces, as well as Methods to calculate these
+/// </summary>
 public static class CAttackMap
 {
+    
+    /// <summary>
+    /// The Array holding the attack maps for the Ray Attacks for all <see cref="CDir"/>s:
+    /// First all the Squares (0-63), then all the directions (0-7)
+    /// </summary>
     public static readonly ulong[][] RayAttacks = new ulong[64][]; // Square, Direction
 
+    /// <summary>
+    /// The Array holding all Rank Attacks (<see cref="CDir.East"/> an <see cref="CDir.West"/>) for all <see cref="CSquare"/>s
+    /// </summary>
     private static readonly ulong[] RankAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all File Attacks (<see cref="CDir.South"/> an <see cref="CDir.North"/>) for all <see cref="CSquare"/>s
+    /// </summary>
     private static readonly ulong[] FileAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all Diagonal Attacks (<see cref="CDir.NoEa"/> an <see cref="CDir.SoWe"/>) for all <see cref="CSquare"/>s
+    /// </summary>
     private static readonly ulong[] DiagonalAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all File Attacks (<see cref="CDir.NoWe"/> an <see cref="CDir.SoEa"/>) for all <see cref="CSquare"/>s
+    /// </summary>
     private static readonly ulong[] AntiDiagonalAttacks = new ulong[64];
 
-    public static readonly ulong[][] ArrPawnAttacks = new ulong[2][]; // White/Black, Square
+    /// <summary>
+    /// The Array holding all Pawn Attacks for all <see cref="CSquare"/>s:
+    /// First 0 for White and 1 for Black, then the Square
+    /// </summary>
+    public static readonly ulong[][] ArrPawnAttacks = new ulong[2][];
+    
+    /// <summary>
+    /// The Array holding all <see cref="EnumPiece.NKnight"/> Attacks for all <see cref="CSquare"/>s
+    /// </summary>
     public static readonly ulong[] ArrKnightAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all <see cref="EnumPiece.NBishop"/> Attacks for all <see cref="CSquare"/>s
+    /// </summary>
     public static readonly ulong[] ArrBishopAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all <see cref="EnumPiece.NRook"/> Attacks for all <see cref="CSquare"/>s
+    /// </summary>
     public static readonly ulong[] ArrRookAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all <see cref="EnumPiece.NQueen"/> Attacks for all <see cref="CSquare"/>s
+    /// </summary>
     public static readonly ulong[] ArrQueenAttacks = new ulong[64];
+    
+    /// <summary>
+    /// The Array holding all <see cref="EnumPiece.NKing"/> Attacks for all <see cref="CSquare"/>s
+    /// </summary>
     public static readonly ulong[] ArrKingAttacks = new ulong[64];
 
-
+    /// <summary>
+    /// The static Function to Calculate all AttackMaps, which must be called before any CBoard-Processing
+    /// </summary>
     public static void Calculate()
     {
         for (int i = 0; i < 64; i++) RayAttacks[i] = new ulong[8];
@@ -39,7 +88,7 @@ public static class CAttackMap
         for (byte sq = 0; sq < 64; sq++)
         {
             RankAttacks[sq] = RayAttacks[sq][(byte)CDir.East] | RayAttacks[sq][(byte)CDir.West];
-            FileAttacks[sq] = RayAttacks[sq][(byte)CDir.Nort] | RayAttacks[sq][(byte)CDir.Sout];
+            FileAttacks[sq] = RayAttacks[sq][(byte)CDir.North] | RayAttacks[sq][(byte)CDir.South];
             DiagonalAttacks[sq] = RayAttacks[sq][(byte)CDir.NoEa] | RayAttacks[sq][(byte)CDir.SoWe];
             AntiDiagonalAttacks[sq] = RayAttacks[sq][(byte)CDir.NoWe] | RayAttacks[sq][(byte)CDir.SoEa];
             ArrBishopAttacks[sq] = DiagonalAttacks[sq] | AntiDiagonalAttacks[sq];
@@ -48,17 +97,27 @@ public static class CAttackMap
         }
     }
 
+    /// <summary>
+    /// Calculates all <see cref="EnumPiece.NKing"/>-Attacks and saves them to <see cref="ArrKingAttacks"/>
+    /// </summary>
     private static void King()
     {
         ulong sqBb = One;
         for (int sq = 0; sq < 64; sq++, sqBb <<= 1) ArrKingAttacks[sq] = KingAttacks(sqBb);
     }
+    
+    /// <summary>
+    /// Calculates all <see cref="EnumPiece.NKnight"/>-Attacks and saves them to <see cref="ArrKnightAttacks"/>
+    /// </summary>
     private static void Knight()
     {
         ulong sqBb = One;
         for (int sq = 0; sq < 64; sq++, sqBb <<= 1) ArrKnightAttacks[sq] = KnightAttacks(sqBb);
     }
     
+    /// <summary>
+    /// Calculates all <see cref="EnumPiece.NPawn"/>-Attacks and saves them to <see cref="ArrPawnAttacks"/>
+    /// </summary>
     private static void Pawn()
     {
         ArrPawnAttacks[0] = new ulong[64];
@@ -71,13 +130,34 @@ public static class CAttackMap
         }
     }
 
+    /// <summary>
+    /// Calculates <see cref="PieceType.WhitePawn"/>-Attacks
+    /// </summary>
+    /// <param name="pawns">A BitBoard from where to start the calculation</param>
+    /// <returns>A BitBoard containing the Attacks</returns>
     private static ulong WPawnAttacks(ulong pawns) => NorthWest(pawns) | NorthEast(pawns);
+    
+    /// <summary>
+    /// Calculates <see cref="PieceType.BlackPawn"/>-Attacks
+    /// </summary>
+    /// <param name="pawns">A BitBoard from where to start the calculation</param>
+    /// <returns>A BitBoard containing the Attacks</returns>
     private static ulong BPawnAttacks(ulong pawns) => SouthWest(pawns) | SouthEast(pawns);
 
+    /// <summary>
+    /// Calculates <see cref="EnumPiece.NKnight"/>-Attacks
+    /// </summary>
+    /// <param name="knights">A BitBoard from where to start the calculation</param>
+    /// <returns>A BitBoard containing the Attacks</returns>
     private static ulong KnightAttacks(ulong knights) =>
         NoNoEa(knights) | NoEaEa(knights) | SoEaEa(knights) | SoSoEa(knights) | SoSoWe(knights) |
         SoWeWe(knights) | NoWeWe(knights) | NoNoWe(knights);
 
+    /// <summary>
+    /// Calculates <see cref="EnumPiece.NKing"/>-Attacks
+    /// </summary>
+    /// <param name="kingSet">A BitBoard from where to start the calculation</param>
+    /// <returns>A BitBoard containing the Attacks</returns>
     private static ulong KingAttacks(ulong kingSet)
     {
         ulong attacks = EastOne(kingSet) | WestOne(kingSet);
@@ -89,13 +169,13 @@ public static class CAttackMap
     private static void AttackNorth()
     {
         ulong nort = AFile & ~One;
-        for (int sq = 0; sq < 64; sq++, nort <<= 1) RayAttacks[sq][(byte)CDir.Nort] = nort;
+        for (int sq = 0; sq < 64; sq++, nort <<= 1) RayAttacks[sq][(byte)CDir.North] = nort;
     }
 
     private static void AttackSouth()
     {
         ulong sout = HFile & ~(One << (byte)H8);
-        for (int sq = 63; sq >= 0; sq--, sout >>= 1) RayAttacks[sq][(byte)CDir.Sout] = sout;
+        for (int sq = 63; sq >= 0; sq--, sout >>= 1) RayAttacks[sq][(byte)CDir.South] = sout;
     }
 
     private static void AttackEast()

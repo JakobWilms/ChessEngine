@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess", "Chess\Chess.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessTests", "ChessTests\ChessTests.csproj", "{88D070EA-6D85-4568-904D-9B9A3D5D12C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBook", "CBook\CBook.csproj", "{C38808AD-037F-4F64-8A1E-371D08258F6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBookViewer", "CBookViewer\CBookViewer.csproj", "{AC60031D-A54E-47F9-B691-C2ACA27B09EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{88D070EA-6D85-4568-904D-9B9A3D5D12C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D070EA-6D85-4568-904D-9B9A3D5D12C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D070EA-6D85-4568-904D-9B9A3D5D12C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C38808AD-037F-4F64-8A1E-371D08258F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C38808AD-037F-4F64-8A1E-371D08258F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C38808AD-037F-4F64-8A1E-371D08258F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C38808AD-037F-4F64-8A1E-371D08258F6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC60031D-A54E-47F9-B691-C2ACA27B09EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC60031D-A54E-47F9-B691-C2ACA27B09EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC60031D-A54E-47F9-B691-C2ACA27B09EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC60031D-A54E-47F9-B691-C2ACA27B09EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

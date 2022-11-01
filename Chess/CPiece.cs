@@ -35,3 +35,12 @@ public enum EnumPiece : byte
     NQueen,
     NKing
 }
+
+public enum CastlingType
+{
+    Null,
+    WhiteCastleKing,
+    WhiteCastleQueen,
+    BlackCastleKing,
+    BlackCastleQueen
+}

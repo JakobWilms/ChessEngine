@@ -1,40 +1,38 @@
-using System;
-using System.Collections.Generic;
+using Chess.Book;
 using static Chess.CDisplay;
 
 namespace Chess;
 
 public class MaterialEngine : Engine
 {
-    
-    private readonly Random _random;
-    
-    public MaterialEngine(ColorType color) : base(color)
-    {
-        _random = new Random();
-    }
 
-    protected override CMove? FindMove()
+    protected override CMove? FindMove(CBookEntry? entry = null)
     {
         int bestScore = -0xfffffff;
-        List<CMove> bestMoves = new List<CMove>();
-        List<CMove> moves = CMoveGeneration.MoveGen(Instance.Board);
-        foreach (var move in moves)
+        CMove?[] bestMoves = new CMove[128];
+        ushort bestMoveIndex = 0;
+        CMove?[] moves = CMoveGeneration.MoveGen(Instance.Board);
+        for (var index = 0; index < moves.Length; index++)
         {
+            var move = moves[index];
+            if (move == null) break;
             move.Make(Instance.Board);
             int score = -NegaMax(3, Instance.Board);
             move.Unmake(Instance.Board);
             if (score == bestScore)
-                bestMoves.Add(move);
+            {
+                bestMoves[bestMoveIndex] = move;
+                bestMoveIndex++;
+            }
             else if (score > bestScore)
             {
-                bestScore = score;
-                bestMoves.Clear();
-                bestMoves.Add(move);
+                bestMoves = new CMove[128];
+                bestMoves[0] = move;
+                bestMoveIndex = 1;
             }
         }
 
-        return bestMoves.Count == 0 ? null : bestMoves.Count == 1 ? bestMoves[0] : bestMoves[_random.Next(bestMoves.Count)];
+        return FromMoveArray(bestMoves);
     }
 
     private int Evaluate(CBoard board)
@@ -54,10 +52,12 @@ public class MaterialEngine : Engine
     {
         if (depth == 0) return Evaluate(board);
         int max = int.MinValue;
-        List<CMove> moves = CMoveGeneration.MoveGen(board);
-        if (moves.Count == 0) return int.MinValue;
-        foreach (var move in moves)
+        CMove?[] moves = CMoveGeneration.MoveGen(board);
+        if (moves.Length == 0) return int.MinValue;
+        for (var index = 0; index < moves.Length; index++)
         {
+            var move = moves[index];
+            if (move == null) break;
             move.Make(board);
             int score = -NegaMax(depth - 1, board);
             move.Unmake(board);

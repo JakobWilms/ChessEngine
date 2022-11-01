@@ -1,5 +1,3 @@
-using System;
-
 namespace Chess;
 
 public static class CSquares
@@ -30,18 +28,22 @@ public static class CSquares
 
     public const ulong One = 0x1;
 
-    private static readonly sbyte[] SimpleDirs = { -9, -8, -7, -1, 1, 7, 8, 9 };
-
+    public static ulong FromSquare(CSquare square) => One << (byte)square;
+    
     public static byte RowOf(CSquare square) => (byte)((byte)square >> 3);
+
+    public static File FileOf(CSquare square) => (File)((byte)square % 8);
+
+    public static Rank RankOf(CSquare square) => (Rank)((byte)square >> 3);
 
     private static sbyte AddendOf(CDir dir) =>
         dir switch
         {
-            CDir.Nort => 8,
+            CDir.North => 8,
             CDir.NoEa => 9,
             CDir.East => 1,
             CDir.SoEa => -7,
-            CDir.Sout => -8,
+            CDir.South => -8,
             CDir.SoWe => -9,
             CDir.West => -1,
             CDir.NoWe => 7,
@@ -53,7 +55,7 @@ public static class CSquares
     public static bool IsSquare(CSquare square, CDir dir)
     {
         sbyte addend = AddendOf(dir);
-        if (dir is CDir.Nort or CDir.Sout) return (byte)square + addend is < 64 and >= 0;
+        if (dir is CDir.North or CDir.South) return (byte)square + addend is < 64 and >= 0;
         ulong sq = One << (byte)square;
         ulong shift = dir switch
         {
@@ -97,7 +99,7 @@ public static class CSquares
         };
         return shift != 0;
     }
-    
+
     public static ulong EastOne(ulong l) => (l << 1) & ~AFile;
     public static ulong WestOne(ulong l) => (l >> 1) & ~HFile;
     public static ulong NorthOne(ulong l) => l << 8;
@@ -116,5 +118,20 @@ public static class CSquares
     public static ulong SoWeWe(ulong l) => (l >> 10) & ~(GFile | HFile);
     public static ulong NoWeWe(ulong l) => (l << 6) & ~(GFile | HFile);
     public static ulong NoNoWe(ulong l) => (l << 15) & ~HFile;
-    
+}
+
+public class SquarePieceTypePair
+{
+    public CSquare Square { get; }
+    public PieceType Type { get; }
+
+    private SquarePieceTypePair(CSquare square, PieceType type)
+    {
+        Square = square;
+        Type = type;
+    }
+
+    public SquarePieceTypePair(byte square, PieceType type) : this((CSquare)square, type)
+    {
+    }
 }

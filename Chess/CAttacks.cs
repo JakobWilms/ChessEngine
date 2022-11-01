@@ -1,5 +1,3 @@
-using System;
-
 namespace Chess;
 
 public static class CAttacks
@@ -22,8 +20,8 @@ public static class CAttacks
         | GetNegativeRayAttacks(occupied, CDir.SoEa, from);
 
     public static ulong FileAttacks(ulong occupied, CSquare from) =>
-        GetPositiveRayAttacks(occupied, CDir.Nort, from)
-        | GetNegativeRayAttacks(occupied, CDir.Sout, from);
+        GetPositiveRayAttacks(occupied, CDir.North, from)
+        | GetNegativeRayAttacks(occupied, CDir.South, from);
 
     public static ulong RankAttacks(ulong occupied, CSquare from) =>
         GetPositiveRayAttacks(occupied, CDir.East, from)

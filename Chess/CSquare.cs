@@ -12,13 +12,23 @@ public enum CSquare : byte
     A8, B8, C8, D8, E8, F8, G8, H8
 }
 
+public enum File : byte
+{
+    A, B, C, D, E, F, G, H
+}
+
+public enum Rank : byte
+{
+    _1, _2, _3, _4, _5, _6, _7, _8
+}
+
 public enum CDir : byte
 {
-    Nort,
+    North,
     NoEa,
     East,
     SoEa,
-    Sout,
+    South,
     SoWe,
     West,
     NoWe
